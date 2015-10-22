@@ -8,11 +8,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.springframework.web.client.RestTemplate;
+
 import com.braintreegateway.BraintreeGateway;
 import com.braintreegateway.Environment;
 import com.braintreegateway.Result;
 import com.braintreegateway.Transaction;
 import com.braintreegateway.TransactionRequest;
+import com.hackathon.controller.OrdRestURIConstants;
 import com.hackathon.model.Item;
 import com.hackathon.model.ItemList;
 import com.hackathon.model.Order;
@@ -21,7 +24,8 @@ import com.hackathon.model.Response;
 
 public class OrderServiceImpl implements OrderService {
 	
-	
+	public static final String SERVER_URI1 = "http://127.0.0.1:13537/OMS";
+	RestTemplate restTemplate = new RestTemplate();
 	
 	private static BraintreeGateway gateway = new BraintreeGateway(
 			  Environment.SANDBOX,
@@ -81,7 +85,27 @@ public class OrderServiceImpl implements OrderService {
 		Collections.sort(items,new CheaperItemPriceComp());
 		Item cheaperItem=items.get(0);
 		
+		Date date = new Date();
+	    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
+	    String strDate = sdf.format(date);
+		int orderId=Calendar.getInstance().get(Calendar.MILLISECOND);
+		
+		
 		System.out.println("**********cheaperItem-->"+cheaperItem.getUnitPrice());
+		double amount=cheaperItem.getUnitPrice()+(cheaperItem.getUnitPrice())*0.6;
+		
+		cheaperItem.setAmount(amount);
+		cheaperItem.setCustomer_id(requestUPC.getCustomer_id());
+		cheaperItem.setTransaction_id(orderId);
+		
+		//calling save order service here
+		
+		
+		//Response response = restTemplate.postForObject(SERVER_URI1+OrdRestURIConstants.CREATE_ORDER, cheaperItem, Response.class);
+		//printOrderData(response);
+		
+		//end save order service	
+		
 		
 		String nonceFromTheClient=gateway.clientToken().generate();
 	    System.out.println("nonceFromTheClient-->"+nonceFromTheClient);
@@ -95,14 +119,21 @@ public class OrderServiceImpl implements OrderService {
 */		Result<Transaction> result = gateway.transaction().sale(request);
 		System.out.println("result-->"+result.isSuccess());
 		System.out.println("In service layer");
-		Date date = new Date();
-	    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
-	    String strDate = sdf.format(date);
-		int orderId=Calendar.getInstance().get(Calendar.MILLISECOND);
+		
 		response.setOrderId(orderId);
 		response.setStatus("Success");
 		response.setTimestamp(strDate);
 		//response.setPayment(order.getPayment());
+		
+		
+		//calling save payment service here
+		
+		
+		//Response response = restTemplate.postForObject(SERVER_URI1+OrdRestURIConstants.CREATE_ORDER, cheaperItem, Response.class);
+				//printOrderData(response);
+		
+				//end save payment service	
+		
 		
 		return response;
 		

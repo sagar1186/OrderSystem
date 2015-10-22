@@ -16,7 +16,27 @@ public class Item implements Serializable{
 	private float taxRate;
 	private int quantity;
 	private double unitPrice;
-	
+	private double amount;
+	private String customer_id;
+	private int transaction_id;
+	public int getTransaction_id() {
+		return transaction_id;
+	}
+	public void setTransaction_id(int transaction_id) {
+		this.transaction_id = transaction_id;
+	}
+	public String getCustomer_id() {
+		return customer_id;
+	}
+	public void setCustomer_id(String customer_id) {
+		this.customer_id = customer_id;
+	}
+	public double getAmount() {
+		return amount;
+	}
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
 	public int getItemId() {
 		return itemId;
 	}

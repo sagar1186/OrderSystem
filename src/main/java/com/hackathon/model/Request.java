@@ -8,20 +8,19 @@ public class Request implements Serializable{
 	private static final long serialVersionUID = -7788619177798333712L;
 	
 	private int item_upc;
-	private String macId;
+	private String customer_id;
 	public int getItem_upc() {
 		return item_upc;
 	}
 	public void setItem_upc(int item_upc) {
 		this.item_upc = item_upc;
 	}
-	public String getMacId() {
-		return macId;
+	public String getCustomer_id() {
+		return customer_id;
 	}
-	public void setMacId(String macId) {
-		this.macId = macId;
+	public void setCustomer_id(String customer_id) {
+		this.customer_id = customer_id;
 	}
-	
 	
 	
 }
